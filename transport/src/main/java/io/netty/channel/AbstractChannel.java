@@ -463,6 +463,11 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
             return remoteAddress0();
         }
 
+        /**
+         * 将 channel 注册到 多路复用器 上
+         * 然后，调用 pipeline 的 fireChannelRegistered
+         * 如果 pipeline 被激活，则调用 pipeline 的 fireChannelActive
+         */
         @Override
         public final void register(EventLoop eventLoop, final ChannelPromise promise) {
             if (eventLoop == null) {
@@ -480,6 +485,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
 
             AbstractChannel.this.eventLoop = eventLoop;
 
+            // 判断当前线程是否是 channel 对应的 nioEventLoop 线程
             if (eventLoop.inEventLoop()) {
                 register0(promise);
             } else {
@@ -518,11 +524,13 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
                 pipeline.invokeHandlerAddedIfNeeded();
 
                 safeSetSuccess(promise);
+                // 调用 fireChannelRegistered
                 pipeline.fireChannelRegistered();
                 // Only fire a channelActive if the channel has never been registered. This prevents firing
                 // multiple channel actives if the channel is deregistered and re-registered.
                 if (isActive()) {
                     if (firstRegistration) {
+                        // 调用 fireChannelActive
                         pipeline.fireChannelActive();
                     } else if (config().isAutoRead()) {
                         // This channel was registered before and autoRead() is set. This means we need to begin read
@@ -540,6 +548,9 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
             }
         }
 
+        /**
+         * 绑定指定端口
+         */
         @Override
         public final void bind(final SocketAddress localAddress, final ChannelPromise promise) {
             assertEventLoop();
@@ -563,6 +574,9 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
 
             boolean wasActive = isActive();
             try {
+                // 具体绑定方法由子类实现
+                //  - NioServerSocketChannel
+                //  - NioSocketChannel
                 doBind(localAddress);
             } catch (Throwable t) {
                 safeSetFailure(promise, t);
@@ -592,6 +606,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
 
             boolean wasActive = isActive();
             try {
+                // 由子类实现
                 doDisconnect();
             } catch (Throwable t) {
                 safeSetFailure(promise, t);
@@ -753,6 +768,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
                         outboundBuffer.close(closeCause);
                     }
                 }
+                // 是否处于刷新状态，处理刷新状态则有消息未发送
                 if (inFlush0) {
                     invokeLater(new Runnable() {
                         @Override

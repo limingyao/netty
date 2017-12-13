@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>io.netty.channel.ChannelHandlerAdapter</OriginalElement>
+  <nodes>
+    <node x="434.0" y="158.0">io.netty.handler.codec.MessageToMessageDecoder</node>
+    <node x="329.75" y="79.0">io.netty.channel.ChannelHandlerAdapter</node>
+    <node x="677.0" y="158.0">io.netty.handler.codec.MessageToMessageEncoder</node>
+    <node x="354.25" y="0.0">io.netty.channel.ChannelHandler</node>
+    <node x="217.0" y="158.0">io.netty.handler.codec.ByteToMessageDecoder</node>
+    <node x="0.0" y="158.0">io.netty.handler.codec.MessageToByteEncoder</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="io.netty.handler.codec.MessageToMessageEncoder" target="io.netty.channel.ChannelHandlerAdapter">
+      <point x="-55.75" y="-14.5" />
+      <point x="732.75" y="128.0" />
+      <point x="500.375" y="128.0" />
+      <point x="73.125" y="14.5" />
+    </edge>
+    <edge source="io.netty.handler.codec.MessageToMessageDecoder" target="io.netty.channel.ChannelHandlerAdapter">
+      <point x="-55.75" y="-14.5" />
+      <point x="489.75" y="138.0" />
+      <point x="451.625" y="138.0" />
+      <point x="24.375" y="14.5" />
+    </edge>
+    <edge source="io.netty.handler.codec.ByteToMessageDecoder" target="io.netty.channel.ChannelHandlerAdapter">
+      <point x="49.25" y="-14.5" />
+      <point x="364.75" y="138.0" />
+      <point x="402.875" y="138.0" />
+      <point x="-24.375" y="14.5" />
+    </edge>
+    <edge source="io.netty.handler.codec.ByteToMessageDecoder" target="io.netty.channel.ChannelHandler">
+      <point x="-49.25" y="-14.5" />
+      <point x="266.25" y="128.0" />
+      <point x="273.6875" y="128.0" />
+      <point x="273.6875" y="59.0" />
+      <point x="398.05" y="59.0" />
+      <point x="-29.19999999999999" y="14.5" />
+    </edge>
+    <edge source="io.netty.handler.codec.MessageToByteEncoder" target="io.netty.channel.ChannelHandlerAdapter">
+      <point x="49.25" y="-14.5" />
+      <point x="147.75" y="138.0" />
+      <point x="354.125" y="138.0" />
+      <point x="-73.125" y="14.5" />
+    </edge>
+    <edge source="io.netty.handler.codec.MessageToByteEncoder" target="io.netty.channel.ChannelHandler">
+      <point x="-49.25" y="-14.5" />
+      <point x="49.25" y="49.0" />
+      <point x="368.85" y="49.0" />
+      <point x="-58.39999999999998" y="14.5" />
+    </edge>
+    <edge source="io.netty.handler.codec.MessageToMessageEncoder" target="io.netty.channel.ChannelHandler">
+      <point x="55.75" y="-14.5" />
+      <point x="844.25" y="49.0" />
+      <point x="485.65" y="49.0" />
+      <point x="58.39999999999998" y="14.5" />
+    </edge>
+    <edge source="io.netty.channel.ChannelHandlerAdapter" target="io.netty.channel.ChannelHandler">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="io.netty.handler.codec.MessageToMessageDecoder" target="io.netty.channel.ChannelHandler">
+      <point x="55.75" y="-14.5" />
+      <point x="601.25" y="138.0" />
+      <point x="585.7737500000001" y="138.0" />
+      <point x="585.7737500000001" y="59.0" />
+      <point x="456.45" y="59.0" />
+      <point x="29.19999999999999" y="14.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="450.5" y="153.5" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
