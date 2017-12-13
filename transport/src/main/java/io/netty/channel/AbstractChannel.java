@@ -39,6 +39,7 @@ import java.util.concurrent.RejectedExecutionException;
 
 /**
  * A skeletal {@link Channel} implementation.
+ * AbstractChannel 聚合了所有 Channel 需要使用到的对象
  */
 public abstract class AbstractChannel extends DefaultAttributeMap implements Channel {
 
@@ -55,15 +56,20 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
     private static final NotYetConnectedException FLUSH0_NOT_YET_CONNECTED_EXCEPTION = ThrowableUtil.unknownStackTrace(
             new NotYetConnectedException(), AbstractUnsafe.class, "flush0()");
 
+    /** 代表父类 Channel */
     private final Channel parent;
+    /** 全局唯一 id */
     private final ChannelId id;
+    /** Unsafe 实例 */
     private final Unsafe unsafe;
+    /** DefaultChannelPipeline */
     private final DefaultChannelPipeline pipeline;
     private final VoidChannelPromise unsafeVoidPromise = new VoidChannelPromise(this, false);
     private final CloseFuture closeFuture = new CloseFuture(this);
 
     private volatile SocketAddress localAddress;
     private volatile SocketAddress remoteAddress;
+    /** 当前 Channel 注册到的 EventLoop */
     private volatile EventLoop eventLoop;
     private volatile boolean registered;
     private boolean closeInitiated;
@@ -217,6 +223,8 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
     public ChannelFuture bind(SocketAddress localAddress) {
         return pipeline.bind(localAddress);
     }
+
+    /** 以下网络I/O操作，由 pipeline 处理 */
 
     @Override
     public ChannelFuture connect(SocketAddress remoteAddress) {
