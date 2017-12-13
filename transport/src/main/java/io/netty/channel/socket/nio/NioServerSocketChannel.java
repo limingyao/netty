@@ -63,6 +63,8 @@ public class NioServerSocketChannel extends AbstractNioMessageChannel
         }
     }
 
+    /** 用于配置 TCP 参数
+     *  */
     private final ServerSocketChannelConfig config;
 
     /**
@@ -138,10 +140,12 @@ public class NioServerSocketChannel extends AbstractNioMessageChannel
 
     @Override
     protected int doReadMessages(List<Object> buf) throws Exception {
+        // 接收客户端连接
         SocketChannel ch = SocketUtils.accept(javaChannel());
 
         try {
             if (ch != null) {
+                // 新的客户端接入
                 buf.add(new NioSocketChannel(this, ch));
                 return 1;
             }

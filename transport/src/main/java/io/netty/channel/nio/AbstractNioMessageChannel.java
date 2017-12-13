@@ -122,16 +122,19 @@ public abstract class AbstractNioMessageChannel extends AbstractNioChannel {
         }
     }
 
+    /** 主要方法，发送POJO */
     @Override
     protected void doWrite(ChannelOutboundBuffer in) throws Exception {
         final SelectionKey key = selectionKey();
         final int interestOps = key.interestOps();
 
         for (;;) {
+            // 从发送消息环形数组弹出一条消息
             Object msg = in.current();
             if (msg == null) {
                 // Wrote all messages.
                 if ((interestOps & SelectionKey.OP_WRITE) != 0) {
+                    // 清除半包写标记
                     key.interestOps(interestOps & ~SelectionKey.OP_WRITE);
                 }
                 break;

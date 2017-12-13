@@ -189,12 +189,14 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
 
     private int doWriteInternal(ChannelOutboundBuffer in, Object msg) throws Exception {
         if (msg instanceof ByteBuf) {
+            // ByteBuf 分支
             ByteBuf buf = (ByteBuf) msg;
             if (!buf.isReadable()) {
                 in.remove();
                 return 0;
             }
 
+            // 返回发送了多少字节，如果为 0 说明 tcp 缓冲区已经满了
             final int localFlushedAmount = doWriteBytes(buf);
             if (localFlushedAmount > 0) {
                 in.progress(localFlushedAmount);
@@ -204,6 +206,7 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
                 return 1;
             }
         } else if (msg instanceof FileRegion) {
+            // 文件分支
             FileRegion region = (FileRegion) msg;
             if (region.transferred() >= region.count()) {
                 in.remove();
@@ -225,13 +228,17 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
         return WRITE_STATUS_SNDBUF_FULL;
     }
 
+    /** 主要方法，发送 ByteBuf 或者 FileRegion */
     @Override
     protected void doWrite(ChannelOutboundBuffer in) throws Exception {
+        // 最大循环发送次数
         int writeSpinCount = config().getWriteSpinCount();
         do {
+            // 从发送消息环形数组弹出一条消息
             Object msg = in.current();
             if (msg == null) {
                 // Wrote all messages.
+                // 清除半包写标记
                 clearOpWrite();
                 // Directly return here so incompleteWrite(...) is not called.
                 return;
@@ -239,6 +246,7 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
             writeSpinCount -= doWriteInternal(in, msg);
         } while (writeSpinCount > 0);
 
+        // 设置写半包标志
         incompleteWrite(writeSpinCount < 0);
     }
 
@@ -267,6 +275,7 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
             setOpWrite();
         } else {
             // Schedule flush again later so other tasks can be picked up in the meantime
+            // 由 Runnable 负责半包消息发送
             Runnable flushTask = this.flushTask;
             if (flushTask == null) {
                 flushTask = this.flushTask = new Runnable() {
@@ -309,7 +318,9 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
             return;
         }
         final int interestOps = key.interestOps();
+        // 判断是否设置写操作位
         if ((interestOps & SelectionKey.OP_WRITE) == 0) {
+            // 设置写操作位
             key.interestOps(interestOps | SelectionKey.OP_WRITE);
         }
     }
@@ -323,7 +334,9 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
             return;
         }
         final int interestOps = key.interestOps();
+        // 判断是否设置写操作位
         if ((interestOps & SelectionKey.OP_WRITE) != 0) {
+            // 清空写操作位
             key.interestOps(interestOps & ~SelectionKey.OP_WRITE);
         }
     }
