@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>io.netty.util.Recycler</OriginalElement>
+  <nodes>
+    <node x="11.5" y="600.0">io.netty.util.Recycler.DefaultHandle</node>
+    <node x="0.0" y="388.5">io.netty.util.Recycler.Handle</node>
+    <node x="180.0" y="278.0">io.netty.util.Recycler.Stack</node>
+    <node x="538.0" y="278.0">io.netty.util.Recycler.WeakOrderQueue</node>
+    <node x="683.5" y="622.5">io.netty.util.Recycler.WeakOrderQueue.Link</node>
+    <node x="130.75" y="0.0">io.netty.util.Recycler</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="io.netty.util.Recycler.WeakOrderQueue.Link" target="io.netty.util.Recycler.WeakOrderQueue">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="136.0" />
+    </edge>
+    <edge source="io.netty.util.Recycler.Handle" target="io.netty.util.Recycler">
+      <point x="0.0" y="-25.5" />
+      <point x="79.5" y="253.0" />
+      <point x="162.875" y="253.0" />
+      <point x="-96.375" y="114.0" />
+    </edge>
+    <edge source="io.netty.util.Recycler.DefaultHandle" target="io.netty.util.Recycler">
+      <point x="56.5" y="-37.0" />
+      <point x="181.0" y="575.0" />
+      <point x="169.5" y="575.0" />
+      <point x="169.5" y="253.0" />
+      <point x="227.125" y="253.0" />
+      <point x="-32.125" y="114.0" />
+    </edge>
+    <edge source="io.netty.util.Recycler.Stack" target="io.netty.util.Recycler">
+      <point x="0.0" y="-136.0" />
+      <point x="349.0" y="253.0" />
+      <point x="291.375" y="253.0" />
+      <point x="32.125" y="114.0" />
+    </edge>
+    <edge source="io.netty.util.Recycler.DefaultHandle" target="io.netty.util.Recycler.Handle">
+      <point x="-56.5" y="-37.0" />
+      <point x="68.0" y="575.0" />
+      <point x="79.5" y="575.0" />
+      <point x="0.0" y="25.5" />
+    </edge>
+    <edge source="io.netty.util.Recycler.WeakOrderQueue" target="io.netty.util.Recycler">
+      <point x="0.0" y="-136.0" />
+      <point x="720.0" y="253.0" />
+      <point x="355.625" y="253.0" />
+      <point x="96.375" y="114.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.8429394812680115" x="451.04786324786323" y="317.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
