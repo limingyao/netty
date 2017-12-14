@@ -40,6 +40,11 @@ import java.util.Set;
  *
  * @param <V> the type of the thread-local variable
  * @see ThreadLocal
+ *
+ * FastThreadLocal 是 Netty 自己定义的一个类似于 JDK 的 ThreadLocal
+ * 但是性能更高的一个数据结构，
+ * ThreadLocal 内部访问数据是 Map 型的数据访问
+ * FastThreadLocal 内部是数组，直接通过索引访问会更快
  */
 public class FastThreadLocal<V> {
 

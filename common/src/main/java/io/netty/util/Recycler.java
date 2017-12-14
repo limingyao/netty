@@ -50,11 +50,17 @@ public abstract class Recycler<T> {
     private static final AtomicInteger ID_GENERATOR = new AtomicInteger(Integer.MIN_VALUE);
     private static final int OWN_THREAD_ID = ID_GENERATOR.getAndIncrement();
     private static final int DEFAULT_INITIAL_MAX_CAPACITY_PER_THREAD = 32768; // Use 32k instances as default.
+    // 每个线程的 Stack 最多缓存多少个对象
     private static final int DEFAULT_MAX_CAPACITY_PER_THREAD;
+    // 初始化容量
     private static final int INITIAL_CAPACITY;
+    // 最大可共享的容量
     private static final int MAX_SHARED_CAPACITY_FACTOR;
+    // WeakOrderQueue 最大数量
     private static final int MAX_DELAYED_QUEUES_PER_THREAD;
+    // WeakOrderQueue 中的数组 DefaultHandle<?>[] elements 容量
     private static final int LINK_CAPACITY;
+    // 掩码
     private static final int RATIO;
 
     static {
@@ -130,6 +136,7 @@ public abstract class Recycler<T> {
 
     protected Recycler(int maxCapacityPerThread, int maxSharedCapacityFactor,
                        int ratio, int maxDelayedQueuesPerThread) {
+        // 根据ratio获取一个掩码,默认为8,那么ratioMask二进制就是 "111"
         ratioMask = safeFindNextPositivePowerOfTwo(ratio) - 1;
         if (maxCapacityPerThread <= 0) {
             this.maxCapacityPerThread = 0;
@@ -142,14 +149,23 @@ public abstract class Recycler<T> {
         }
     }
 
+    /**
+     * 获取对象池中对象的入口
+     * 如果有可用对象，直接返回
+     * 没有就调用 newObject 方法创建一个
+     */
     @SuppressWarnings("unchecked")
     public final T get() {
+        // 通过修改maxCapacityPerThread=0可以关闭回收功能, 默认值是32768
         if (maxCapacityPerThread == 0) {
             return newObject((Handle<T>) NOOP_HANDLE);
         }
+        // 获取当前线程对应的Stack
         Stack<T> stack = threadLocal.get();
+        // 从对象池获取对象
         DefaultHandle<T> handle = stack.pop();
         if (handle == null) {
+            // 没有对象,则调用子类的newObject方法创建新的对象
             handle = stack.newHandle();
             handle.value = newObject(handle);
         }
@@ -157,6 +173,7 @@ public abstract class Recycler<T> {
     }
 
     /**
+     * 对象使用完毕后回收对象
      * @deprecated use {@link Handle#recycle(Object)}.
      */
     @Deprecated
@@ -167,6 +184,7 @@ public abstract class Recycler<T> {
 
         DefaultHandle<T> h = (DefaultHandle<T>) handle;
         if (h.stack.parent != this) {
+            // 旧的方法，如果不是当前线程的, 直接不回收了
             return false;
         }
 
@@ -188,12 +206,19 @@ public abstract class Recycler<T> {
         void recycle(T object);
     }
 
+    /**
+     * DefaultHandle 就是 Stack 的包装对象
+     * 持有 stack 的引用，可以回收自己到 stack 中
+     */
     static final class DefaultHandle<T> implements Handle<T> {
+        // 标记最新一次回收的线程id
         private int lastRecycledId;
+        // 回收前的校验
         private int recycleId;
-
+        // 标记是否已经被回收
         boolean hasBeenRecycled;
 
+        // 持有stack的引用
         private Stack<?> stack;
         private Object value;
 
@@ -206,14 +231,22 @@ public abstract class Recycler<T> {
             if (object != value) {
                 throw new IllegalArgumentException("object does not belong to handle");
             }
+            // 回收自己到stack中
             stack.push(this);
         }
     }
 
+    /**
+     * 线程本地变量，每个线程都有自己的 Map<Stack<?>, WeakOrderQueue>
+     * 根据 Stack 可以获取到对应的 WeakOrderQueue
+     */
     private static final FastThreadLocal<Map<Stack<?>, WeakOrderQueue>> DELAYED_RECYCLED =
             new FastThreadLocal<Map<Stack<?>, WeakOrderQueue>>() {
         @Override
         protected Map<Stack<?>, WeakOrderQueue> initialValue() {
+            // 使用 WeakHashMap，保证对 key 也就是 Stack 是弱引用
+            // 一旦 Stack 没有强引用了, 会被回收的
+            // WeakHashMap不会无限占用内存
             return new WeakHashMap<Stack<?>, WeakOrderQueue>();
         }
     };
@@ -222,14 +255,18 @@ public abstract class Recycler<T> {
     // but we aren't absolutely guaranteed to ever see anything at all, thereby keeping the queue cheap to maintain
     private static final class WeakOrderQueue {
 
+        // 用于标记空的 WeakOrderQueue，在达到 WeakOrderQueue 数量上限时放入一个这个，表示结束了
         static final WeakOrderQueue DUMMY = new WeakOrderQueue();
 
         // Let Link extend AtomicInteger for intrinsics. The Link itself will be used as writerIndex.
+        // 这里为什么要继承 AtomicInteger,因为这样 Link 可以通过 get() 拿到 writerIndex
         @SuppressWarnings("serial")
         private static final class Link extends AtomicInteger {
             private final DefaultHandle<?>[] elements = new DefaultHandle[LINK_CAPACITY];
 
+            // 读索引
             private int readIndex;
+            // 下一个索引
             private Link next;
         }
 
