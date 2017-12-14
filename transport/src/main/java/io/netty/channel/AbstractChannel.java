@@ -515,6 +515,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
                     return;
                 }
                 boolean firstRegistration = neverRegistered;
+                // 由子类实现
                 doRegister();
                 neverRegistered = false;
                 registered = true;
@@ -909,6 +910,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
                 return;
             }
 
+            // 添加到环形缓冲区数组
             outboundBuffer.addMessage(msg, size, promise);
         }
 
@@ -921,7 +923,9 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
                 return;
             }
 
+            // 标记本次发送消息范围
             outboundBuffer.addFlush();
+            // 发送消息
             flush0();
         }
 
@@ -955,6 +959,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
             }
 
             try {
+                // 由子类实现
                 doWrite(outboundBuffer);
             } catch (Throwable t) {
                 if (t instanceof IOException && config().isAutoClose()) {

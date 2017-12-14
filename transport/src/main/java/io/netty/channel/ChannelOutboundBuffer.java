@@ -71,6 +71,12 @@ public final class ChannelOutboundBuffer {
 
     private final Channel channel;
 
+    /**
+     * 环形发送缓冲区
+     * flushedEntry 已经发送的头部
+     * unflushedEntry 未发送的头部
+     * tailEntry 未发送的尾部
+     */
     // Entry(flushedEntry) --> ... Entry(unflushedEntry) --> ... Entry(tailEntry)
     //
     // The Entry that is the first in the linked-list structure that was flushed
@@ -112,13 +118,16 @@ public final class ChannelOutboundBuffer {
     public void addMessage(Object msg, int size, ChannelPromise promise) {
         Entry entry = Entry.newInstance(msg, size, total(msg), promise);
         if (tailEntry == null) {
+            // 环形缓冲区为空
             flushedEntry = null;
             tailEntry = entry;
         } else {
+            // 环形缓冲区不为空，添加到尾部
             Entry tail = tailEntry;
             tail.next = entry;
             tailEntry = entry;
         }
+        // 设置待发送首部
         if (unflushedEntry == null) {
             unflushedEntry = entry;
         }
