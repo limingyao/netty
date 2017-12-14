@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>io.netty.channel.ChannelFuture</OriginalElement>
+  <nodes>
+    <node x="185.0" y="0.0">java.util.concurrent.Future</node>
+    <node x="82.25" y="237.0">io.netty.channel.ChannelPromise</node>
+    <node x="38.5" y="158.0">io.netty.util.concurrent.Promise</node>
+    <node x="0.0" y="0.0">java.lang.SuppressWarnings</node>
+    <node x="111.75" y="79.0">io.netty.util.concurrent.Future</node>
+    <node x="155.5" y="158.0">io.netty.channel.ChannelFuture</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="io.netty.channel.ChannelFuture" target="io.netty.util.concurrent.Future">
+      <point x="0.0" y="-14.5" />
+      <point x="224.5" y="133.0" />
+      <point x="177.75" y="133.0" />
+      <point x="22.0" y="14.5" />
+    </edge>
+    <edge source="io.netty.util.concurrent.Future" target="java.util.concurrent.Future">
+      <point x="22.0" y="-14.5" />
+      <point x="177.75" y="54.0" />
+      <point x="229.0" y="54.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="io.netty.util.concurrent.Future" target="java.lang.SuppressWarnings">
+      <point x="-22.0" y="-14.5" />
+      <point x="133.75" y="54.0" />
+      <point x="82.5" y="54.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="io.netty.channel.ChannelPromise" target="io.netty.channel.ChannelFuture">
+      <point x="36.75" y="-14.5" />
+      <point x="192.5" y="212.0" />
+      <point x="224.5" y="212.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="io.netty.util.concurrent.Promise" target="io.netty.util.concurrent.Future">
+      <point x="0.0" y="-14.5" />
+      <point x="87.0" y="133.0" />
+      <point x="133.75" y="133.0" />
+      <point x="-22.0" y="14.5" />
+    </edge>
+    <edge source="io.netty.channel.ChannelPromise" target="io.netty.util.concurrent.Promise">
+      <point x="-36.75" y="-14.5" />
+      <point x="119.0" y="212.0" />
+      <point x="87.0" y="212.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="136.5" y="93.5" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
